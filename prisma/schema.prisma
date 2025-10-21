@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================
+// Business Object (BO)
+// ==========================
+model DataType {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  fields     Field[]
+  createdAt  DateTime @default(now())
+  tsFilePath String?
+  views      View[]
+}
+
+model Field {
+  id       Int     @id @default(autoincrement())
+  name     String
+  type     String
+  required Boolean
+  isList   Boolean @default(false)
+
+  dataType   DataType @relation(fields: [dataTypeId], references: [id], onDelete: Cascade)
+  dataTypeId Int
+
+  @@unique([name, dataTypeId]) // ✅ thêm dòng này
+}
+
+model ApiService {
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  baseUrl    String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  tsFilePath String?
+  methods    ApiMethod[]
+  views      View[]
+}
+
+model ApiMethod {
+  id            Int        @id @default(autoincrement())
+  name          String
+  returnType    String
+  isList        Boolean    @default(false)
+  documentation String?
+  service       ApiService @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  serviceId     Int
+  params        ApiParam[]
+
+  @@unique([name, serviceId])
+}
+
+model ApiParam {
+  id       Int       @id @default(autoincrement())
+  name     String
+  type     String
+  isList   Boolean   @default(false)
+  required Boolean   @default(true)
+  method   ApiMethod @relation(fields: [methodId], references: [id], onDelete: Cascade)
+  methodId Int
+}
+
+model View {
+  id           Int         @id @default(autoincrement())
+  name         String
+  createdAt    DateTime    @default(now())
+  dataType     DataType?   @relation(fields: [dataTypeId], references: [id])
+  dataTypeId   Int?
+  apiService   ApiService? @relation(fields: [apiServiceId], references: [id])
+  apiServiceId Int?
+}
+
+// 🔹 Lưu lịch sử upload Swagger
+model SwaggerUpload {
+  id         Int      @id @default(autoincrement())
+  fileName   String
+  uploadedAt DateTime @default(now())
+  apiCount   Int
+  typeCount  Int
+}
