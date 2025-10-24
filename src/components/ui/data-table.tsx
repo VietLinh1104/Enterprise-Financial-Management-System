@@ -42,7 +42,7 @@ interface HasId {
   attachmentId?: string
   partnerId?: string
   contractId?: string
-  assertsId?: string
+  assetId?: string
 }
 
 export interface ActionItem<TData extends HasId> {

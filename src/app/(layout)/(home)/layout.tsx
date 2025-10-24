@@ -28,7 +28,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
     () => [
       { href: "/", label: "Tổng quan", icon: Home },
       { href: "/erp-1/transactions", label: "Hệ quản lý", icon: FolderOpen },
-      { href: "/dev-tool/data-type", label: "Dev-Tool", icon: Settings },
+      // { href: "/dev-tool/data-type", label: "Dev-Tool", icon: Settings },
       { href: "/users-permission/invite-member", label: "Users & Permission", icon: Users },
     ],
     []

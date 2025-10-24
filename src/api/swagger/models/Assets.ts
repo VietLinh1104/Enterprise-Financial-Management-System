@@ -7,9 +7,9 @@ export type Assets = {
     assetId?: string;
     user?: User;
     name?: string;
-    purchaseDate?: string;
+    purchaseDate?: Date;
     status?: string;
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 };
 

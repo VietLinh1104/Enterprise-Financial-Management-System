@@ -8,80 +8,82 @@ import { toast } from "sonner"
 import api from "@/lib/axios"
 import { useRouter } from "next/navigation"
 import { confirmToast } from "@/components/ui/confirm-toast"
-import { Partners } from "@/api/swagger/models/Partners"
+import { Assets } from "@/api/swagger/models/Assets"
 import { DataTableSkeleton } from "@/components/ui/data-table-skeleton"
 import type { SpringPage } from "@/components/ui/data-table" // ⚡ import kiểu SpringPage
 
 
-const columns: ColumnDef<Partners>[] = [
- {
-    accessorKey: "name",
-    header: "Tên đối tác",
-    cell: ({ row }) => {
-      const val = row.getValue("name")
-      return val
-    }
-  },
- {
-    accessorKey: "type",
-    header: "Danh mục",
-    cell: ({ row }) => {
-      const val = row.getValue("type")
-      return <span className="px-2 py-1 rounded bg-blue-100 text-blue-700 text-xs">{val as string}</span>
-    }
-  },
- {
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ row }) => {
-      const val = row.getValue("email")
-      return val
-    }
-  },
- {
-    accessorKey: "phone",
-    header: "Số điện thoại",
-    cell: ({ row }) => {
-      const val = row.getValue("phone")
-      return val
-    }
-  },
- {
-    accessorKey: "address",
-    header: "Địa chỉ",
-    cell: ({ row }) => {
-      const val = row.getValue("address")
-      return val
-    }
-  },
- {
-    accessorKey: "createdAt",
-    header: "Create At",
-    cell: ({ row }) => {
-      const val = row.getValue("createdAt")
-      return val ? new Date(val as Date).toLocaleDateString() : ""
-    }
-  }
+const columns: ColumnDef<Assets>[] = [
+	{
+		accessorKey: "name",
+		header: "Tên tài sản",
+		cell: ({ row }) => {
+			const val = row.getValue("name")
+			return val
+		}
+		},
+	{
+		accessorKey: "user",
+		header: "Người tạo",
+		cell: ({ row }) => {
+			const user = row.original.user
+			return user ? user.fullName || user.username : "—"
+		},
+
+		},
+	{
+		accessorKey: "purchaseDate",
+		header: "Ngày mua",
+		cell: ({ row }) => {
+			const val = row.getValue("purchaseDate")
+			return val ? new Date(val as Date).toLocaleDateString() : ""
+		}
+		},
+	{
+		accessorKey: "status",
+		header: "Trạng thái",
+		cell: ({ row }) => {
+			const val = row.getValue("status")
+			return <span className="px-2 py-1 rounded bg-blue-100 text-blue-700 text-xs">{val as string}</span>
+		}
+		},
+	{
+		accessorKey: "createdAt",
+		header: "Create At",
+		cell: ({ row }) => {
+			const val = row.getValue("createdAt")
+			return val ? new Date(val as Date).toLocaleDateString() : ""
+		}
+		},
+	{
+		accessorKey: "updatedAt",
+		header: "Update At",
+		cell: ({ row }) => {
+			const val = row.getValue("updatedAt")
+			return val ? new Date(val as Date).toLocaleDateString() : ""
+		}
+		}
 ]
+
 
 // 🧩 Component chính
 export default function TransactionListTable() {
 	//#region [STATE]
-	const [pageData, setPageData] = useState<SpringPage<Partners>>() // ✅ dùng kiểu Page<Transactions>
+	const [pageData, setPageData] = useState<SpringPage<Assets>>() // ✅ dùng kiểu Page<Transactions>
 	const [pageIndex, setPageIndex] = useState(0)
 	const [pageSize] = useState(10)
 	const [loading, setLoading] = useState(false)
 	const [search, setSearch] = useState("")
 	const [debouncedSearch, setDebouncedSearch] = useState("")
-	const [selected, setSelected] = useState<Partners[]>([])
-    const router = useRouter()
+	const [selected, setSelected] = useState<Assets[]>([])
+		const router = useRouter()
 	//#endregion
 
 	//#region [API FUNCTION] (để tái sử dụng trong Handle functions)
-	async function getPartners(page: number, size: number, search?: string) {
+	async function getAssets(page: number, size: number, search?: string) {
 		try {
 			toast.loading("Đang tải dữ liệu...")
-			const res = await api.get("/api/partners", {
+			const res = await api.get("/api/assets", {
 				params: {
 					page, // ⚠️ Nếu backend Spring 1-based → dùng page + 1
 					size,
@@ -89,35 +91,35 @@ export default function TransactionListTable() {
 				},
 			})
 			setPageData(res.data)
-			console.log("✅ Dữ liệu giao dịch:", res.data)
+			console.log("Dữ liệu tài sản:", res.data)
 		} catch (err) {
-			console.error("❌ Lỗi khi load giao dịch:", err)
-			toast.error("Không thể tải dữ liệu giao dịch")
+			console.error("Lỗi khi load tài sản:", err)
+			toast.error("Không thể tải dữ liệu tài sản")
 		} finally {
 			toast.dismiss()
 		}
 	}
 
-    async function deleteListPartners(objIds: string[]) {
+		async function deleteListPartners(objIds: string[]) {
 		try {
-            await api.delete("/api/partners/batch-delete", { data: objIds })
-            toast.success(`Đã xóa ${objIds.length} đối tác`)
-            await getPartners(pageIndex, pageSize, debouncedSearch)
-        } catch (err) {
-            console.error("❌ Lỗi khi xóa:", err)
-            toast.error("Không thể xóa đối tác")
-        }
+			await api.delete("/api/assets/batch-delete", { data: objIds })
+			toast.success(`Đã xóa ${objIds.length} đối tác`)
+			await getAssets(pageIndex, pageSize, debouncedSearch)
+			} catch (err) {
+				console.error("❌ Lỗi khi xóa:", err)
+				toast.error("Không thể xóa tài sản")
+			}
 	}
 
-    async function deletePartner(id: string) {
+		async function deletePartner(id: string) {
 		try {
-            await api.delete(`/api/partners/${id}`)
-            toast.success(`Đã xóa đối tác với ID: ${id}`)
-            await getPartners(pageIndex, pageSize, debouncedSearch)
-        } catch (err) {
-            console.error("❌ Lỗi khi xóa:", err)
-            toast.error(`Không thể xóa đối tác Error: ${err}`)
-        }
+			await api.delete(`/api/assets/${id}`)
+			toast.success(`Đã xóa tài sản với ID: ${id}`)
+			await getAssets(pageIndex, pageSize, debouncedSearch)
+			} catch (err) {
+				console.error("❌ Lỗi khi xóa:", err)
+				toast.error(`Không thể xóa tài sản Error: ${err}`)
+			}
 	}
 	//#endregion
 
@@ -129,51 +131,51 @@ export default function TransactionListTable() {
 
 	useEffect(() => {
 		setLoading(true)
-		getPartners(pageIndex, pageSize, debouncedSearch).finally(() =>
+		getAssets(pageIndex, pageSize, debouncedSearch).finally(() =>
 			setLoading(false)
 		)
 	}, [pageIndex, debouncedSearch, pageSize])
 	//#endregion
 
 	//#region [HANDLE] (chắc chắn đang đc gán vào btn nào đấy) 
-    const handleDeleteSelected = React.useCallback(async () => {
-        // Lấy danh sách transactionId đã chọn
-        const objIds = selected
-            .map((t) => t.partnerId)
-            .filter((id): id is string => !!id)
+		const handleDeleteSelected = React.useCallback(async () => {
+			// Lấy danh sách transactionId đã chọn
+			const objIds = selected
+				.map((t) => t.assetId)
+				.filter((id): id is string => !!id)
 
-        console.log("🧾 Các transactionId đã chọn:", objIds)
+			console.log("🧾 Các transactionId đã chọn:", objIds)
 
-        if (objIds.length === 0) {
-            toast.info("Không có giao dịch nào để xóa")
-            return
-        }
+			if (objIds.length === 0) {
+				toast.info("Không có giao dịch nào để xóa")
+				return
+			}
 
-        confirmToast({
-            title: "Xóa giao dịch?",
-            description: "Hành động này sẽ xóa vĩnh viễn dữ liệu.",
-            confirmText: "Xóa",
-            onConfirm: async () => {
-                await deleteListPartners(objIds);
-            },
-        })
-    }, [selected])
+			confirmToast({
+				title: "Xóa giao dịch?",
+				description: "Hành động này sẽ xóa vĩnh viễn dữ liệu.",
+				confirmText: "Xóa",
+				onConfirm: async () => {
+					await deleteListPartners(objIds);
+				},
+			})
+		}, [selected])
 
 	const handleDelete = async (id: number | string) => {
-        confirmToast({
-            title: "Xóa giao dịch?",
-            description: "Hành động này sẽ xóa vĩnh viễn dữ liệu.",
-            confirmText: "Xóa",
-            onConfirm: async () => {
-                await deletePartner(id as string)
-            },
-        })
-		
+		confirmToast({
+			title: "Xóa giao dịch?",
+			description: "Hành động này sẽ xóa vĩnh viễn dữ liệu.",
+			confirmText: "Xóa",
+			onConfirm: async () => {
+				await deletePartner(id as string)
+			},
+		})
+
 	}
 
 	const handleExportCSV = () => {
-        toast.info("Chức năng xuất CSV chưa làm xong :))) từ từ")
-        
+		toast.info("Chức năng xuất CSV chưa làm xong :))) từ từ")
+
 
 	}
 	//#endregion
@@ -183,7 +185,7 @@ export default function TransactionListTable() {
 		const base = [
 			{
 				label: "Thêm mới",
-				href: "/erp-1/partners/new",
+				href: "/erp-1/assets/new",
 				icon: <Plus className="h-4 w-4" />,
 			},
 			{
@@ -208,12 +210,12 @@ export default function TransactionListTable() {
 		() => [
 			{
 				label: "Sửa",
-				href: "/erp-1/partners/:id",
+				href: "/erp-1/assets/:id",
 			},
 			{
 				label: "Xóa",
-				onClick: (row: Partners) =>
-					handleDelete((row as Partners).partnerId as string),
+				onClick: (row: Assets) =>
+					handleDelete((row as Assets).assetId as string),
 				variant: "destructive" as const,
 			},
 		],
@@ -230,7 +232,7 @@ export default function TransactionListTable() {
 					toolbarActions={toolbarActions} // 🔥 Truyền y hệt toolbar chính
 				/>
 			) : (
-				<DataTable<Partners, unknown>
+				<DataTable<Assets, unknown>
 					columns={columns}
 					pageData={pageData} // ✅ dùng đúng prop
 					onPageChange={setPageIndex}
@@ -241,7 +243,7 @@ export default function TransactionListTable() {
 					toolbarActions={toolbarActions}
 					actions={rowActions}
 					onRowClick={(row) =>
-						router.push(`/erp-1/partners/${row.partnerId}`)
+						router.push(`/erp-1/assets/${row.assetId}`)
 					}
 				/>
 			)}

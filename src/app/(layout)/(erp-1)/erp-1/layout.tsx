@@ -6,9 +6,6 @@ import { usePathname } from "next/navigation";
 import {
   Menu,
   X,
-  Folder,
-  Home,
-  Upload,
   Search,
   ChevronDown,
   MessageSquare,

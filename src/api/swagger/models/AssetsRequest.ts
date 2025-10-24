@@ -5,7 +5,7 @@
 export type AssetsRequest = {
     userId?: string;
     name?: string;
-    purchaseDate?: string;
+    purchaseDate?: Date;
     status?: string;
 };
 
