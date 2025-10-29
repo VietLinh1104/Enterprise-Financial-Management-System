@@ -10,7 +10,6 @@ import { confirmToast } from "@/components/ui/confirm-toast"
 import { Attachments } from "@/api/swagger/models/Attachments"
 import type { SpringPage } from "@/components/ui/data-table"
 import { r2Fetch, DeleteFileResponse, DeleteListResponse } from "@/lib/r2"
-import { UppyDialog } from "@/components/ui/uppy-dialog"
 import { DialogAttachmentInfo } from "@/components/ui/dialog-attachment-info"
 import type { attachmentsRequest } from "@/types/erp-1/attachmentsRequest"
 import { DataTableSkeleton } from "@/components/ui/data-table-skeleton"
@@ -212,7 +211,7 @@ export default function AttachmentsListTable() {
       {/* 🔹 Uppy dialog */}
       <div className="hidden">
 
-      <UppyDialog onUploadSuccess={handleUploadSuccess} open={uploadOpen} onOpenChange={setUploadOpen} />
+      {/* <UppyDialog onUploadSuccess={handleUploadSuccess} open={uploadOpen} onOpenChange={setUploadOpen} /> */}
       </div>
 
       {/* 🔹 Dialog chi tiết file */}

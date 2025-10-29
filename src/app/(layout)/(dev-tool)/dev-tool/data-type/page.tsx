@@ -147,43 +147,44 @@ export default function DataTypeListPage() {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <DataTable<DataType, unknown>
-          columns={columns}
-          data={dataTypes}
-          total={total}
-          pageSize={pageSize}
-          pageIndex={pageIndex}
-          onPageChange={setPageIndex}
-          withCheckbox
-          searchValue={search}
-          onSearchChange={setSearch}
-          onSelectionChange={setSelected}   // ✅ lấy row chọn
-          toolbarActions={[
-            ...(selected.length > 0
-              ? [
-                  {
-                    label: `Delete Selected (${selected.length})`,
-                    onClick: deleteSelected,
-                    variant: "destructive" as const,
-                    icon: <Trash className="h-4 w-4" />,
-                  },
-                ]
-              : []),
-            {
-              label: "Create Data Type",
-              href: "/dev-tool/data-type/create",
-              icon: <Plus className="h-4 w-4" />,
-            },
-          ]}
-          actions={[
-            { label: "Edit", href: "/dev-tool/data-type/:id" },
-            {
-              label: "Delete",
-              onClick: (row: DataType) => deleteBO(row.id),
-              variant: "destructive",
-            },
-          ]}
-        />
+        // <DataTable<DataType, unknown>
+        //   columns={columns}
+        //   data={dataTypes}
+        //   total={total}
+        //   pageSize={pageSize}
+        //   pageIndex={pageIndex}
+        //   onPageChange={setPageIndex}
+        //   withCheckbox
+        //   searchValue={search}
+        //   onSearchChange={setSearch}
+        //   onSelectionChange={setSelected}   // ✅ lấy row chọn
+        //   toolbarActions={[
+        //     ...(selected.length > 0
+        //       ? [
+        //           {
+        //             label: `Delete Selected (${selected.length})`,
+        //             onClick: deleteSelected,
+        //             variant: "destructive" as const,
+        //             icon: <Trash className="h-4 w-4" />,
+        //           },
+        //         ]
+        //       : []),
+        //     {
+        //       label: "Create Data Type",
+        //       href: "/dev-tool/data-type/create",
+        //       icon: <Plus className="h-4 w-4" />,
+        //     },
+        //   ]}
+        //   actions={[
+        //     { label: "Edit", href: "/dev-tool/data-type/:id" },
+        //     {
+        //       label: "Delete",
+        //       onClick: (row: DataType) => deleteBO(row.id),
+        //       variant: "destructive",
+        //     },
+        //   ]}
+        // />
+        <></>
       )}
     </div>
   )

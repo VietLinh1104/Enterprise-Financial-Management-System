@@ -31,7 +31,6 @@ import {
 } from "@/components/ui/popover"
 import { CalendarIcon, Eye, EyeOff, Pencil, Trash } from "lucide-react"
 import { format } from "date-fns"
-import { UppyDialog } from "@/components/ui/uppy-dialog"
 import { Attachments } from "@/api/swagger"
 import { AttachmentList } from "@/components/ui/attachment-list"
 
@@ -245,7 +244,7 @@ export function DynamicForm({
                             <AttachmentList files={rhfField.value as Attachments[]} readOnly />
                           ) : (
                             <>
-                              <UppyDialog
+                              {/* <UppyDialog
                                 onUploadSuccess={(uploadedFiles) => {
                                   const current = (rhfField.value as Attachments[]) ?? []
                                   const merged = [...current, ...uploadedFiles]
@@ -257,7 +256,7 @@ export function DynamicForm({
                                 onChange={(newFiles) => {
                                   form.setValue(field.id, newFiles)
                                 }}
-                              />
+                              /> */}
                             </>
                           )}
                         </div>

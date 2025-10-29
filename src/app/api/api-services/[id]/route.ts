@@ -5,7 +5,6 @@ import {
   updateApiServiceFile,
 } from "@/services/dev-tool/api/api-service-gen.service"
 
-// Input types khớp với form gửi lên
 interface ApiParamInput {
   name: string
   type: string
@@ -29,38 +28,42 @@ interface ApiServiceInput {
 }
 
 // DELETE /api/api-services/:id
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  _: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params
   const service = await prisma.apiService.findUnique({
-    where: { id: Number(params.id) },
+    where: { id: Number(id) },
   })
 
   if (!service) {
     return NextResponse.json({ error: "Service not found" }, { status: 404 })
   }
 
-  // Xoá file đã generate
   if (service.tsFilePath) {
     deleteApiServiceFile(service.tsFilePath)
   }
 
-  // Xoá record DB (cascade xoá methods + params)
   await prisma.apiService.delete({ where: { id: service.id } })
-
   return NextResponse.json({ success: true })
 }
 
 // PUT /api/api-services/:id
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params
   const body: ApiServiceInput = await req.json()
   const { name, baseUrl, fields } = body
 
-  // 1. Clear methods cũ để update lại
   await prisma.apiMethod.deleteMany({
-    where: { serviceId: Number(params.id) },
+    where: { serviceId: Number(id) },
   })
 
   let service = await prisma.apiService.update({
-    where: { id: Number(params.id) },
+    where: { id: Number(id) },
     data: {
       name,
       baseUrl,
@@ -85,7 +88,6 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     include: { methods: { include: { params: true } } },
   })
 
-  // 2. Regenerate file
   try {
     const dataTypes = (
       await prisma.dataType.findMany({

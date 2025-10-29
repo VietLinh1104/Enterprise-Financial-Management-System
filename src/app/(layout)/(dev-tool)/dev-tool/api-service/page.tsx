@@ -89,46 +89,47 @@ export default function ApiServiceListPage() {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <DataTable<ApiService, unknown>
-          columns={columns}
-          data={services}
-          total={services.length}
-          pageSize={pageSize}
-          pageIndex={pageIndex}
-          onPageChange={setPageIndex}
-          withCheckbox
-          searchValue={search}
-          onSearchChange={setSearch}
-          onSelectionChange={setSelected}
-          toolbarActions={[
-            ...(selected.length > 0
-              ? [
-                  {
-                    label: `Delete Selected (${selected.length})`,
-                    onClick: handleDeleteSelected,
-                    variant: "destructive" as const,
-                    icon: <Trash className="h-4 w-4" />,
-                  },
-                ]
-              : []),
-            {
-              label: "Create API Service",
-              href: "/dev-tool/api-service/create",
-              icon: <Plus className="h-4 w-4" />,
-            },
-          ]}
-          actions={[
-            {
-              label: "Edit",
-              href: "/dev-tool/api-service/:id",
-            },
-            {
-              label: "Delete",
-              onClick: (row) => handleDelete(row.id),
-              variant: "destructive",
-            },
-          ]}
-        />
+        // <DataTable<ApiService, unknown>
+        //   columns={columns}
+        //   data={services}
+        //   total={services.length}
+        //   pageSize={pageSize}
+        //   pageIndex={pageIndex}
+        //   onPageChange={setPageIndex}
+        //   withCheckbox
+        //   searchValue={search}
+        //   onSearchChange={setSearch}
+        //   onSelectionChange={setSelected}
+        //   toolbarActions={[
+        //     ...(selected.length > 0
+        //       ? [
+        //           {
+        //             label: `Delete Selected (${selected.length})`,
+        //             onClick: handleDeleteSelected,
+        //             variant: "destructive" as const,
+        //             icon: <Trash className="h-4 w-4" />,
+        //           },
+        //         ]
+        //       : []),
+        //     {
+        //       label: "Create API Service",
+        //       href: "/dev-tool/api-service/create",
+        //       icon: <Plus className="h-4 w-4" />,
+        //     },
+        //   ]}
+        //   actions={[
+        //     {
+        //       label: "Edit",
+        //       href: "/dev-tool/api-service/:id",
+        //     },
+        //     {
+        //       label: "Delete",
+        //       onClick: (row) => handleDelete(row.id),
+        //       variant: "destructive",
+        //     },
+        //   ]}
+        // />
+        <></>
       )}
     </div>
   )
