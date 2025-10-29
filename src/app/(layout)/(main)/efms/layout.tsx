@@ -29,11 +29,11 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
   const nav = useMemo(
     () => [
       { href: "/", label: "Quay lại tổng quan", icon: ChevronLeft },
-      { href: "/erp-1/transactions", label: "Giao Dịch", icon: WalletCards },
-      { href: "/erp-1/contracts", label: "Hợp đồng", icon: Signature },
-      { href: "/erp-1/partners", label: "Đối tác", icon: Handshake },
-      { href: "/erp-1/assets", label: "Tài sản", icon: Archive },
-      { href: "/erp-1/attachments", label: "Tài liệu", icon: FileUp },
+      { href: "/efms/transactions", label: "Giao Dịch", icon: WalletCards },
+      { href: "/efms/contracts", label: "Hợp đồng", icon: Signature },
+      { href: "/efms/partners", label: "Đối tác", icon: Handshake },
+      { href: "/efms/assets", label: "Tài sản", icon: Archive },
+      { href: "/efms/attachments", label: "Tài liệu", icon: FileUp },
     ],[]
   );
 
