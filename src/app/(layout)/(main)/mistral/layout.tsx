@@ -6,19 +6,16 @@ import { usePathname } from "next/navigation";
 import {
   Menu,
   X,
-  Home,
-  Users,
-  Settings,
   Search,
   ChevronDown,
   MessageSquare,
   CheckCircle,
   Package,
-  FolderOpen,
-  MessageCircleMore,
-  Bot
+  ChevronLeft,
 } from "lucide-react";
-import { Breadcrumb, NavSection, NavList } from "@/components/dashboard";
+import { NavList } from "@/components/dashboard";
+import ChatSection from "@/components/dashboard/ChatSection";
+
 
 export default function DashboardLayout({ children }: PropsWithChildren) {
   const [open, setOpen] = useState(false); // mobile sidebar
@@ -27,16 +24,18 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
   // Primary nav
   const nav = useMemo(
     () => [
-      { href: "/", label: "Tổng quan", icon: Home },
-      { href: "/efms/transactions", label: "Hệ quản lý", icon: FolderOpen },
-      { href: "/dev-tool/swagger", label: "Dev-Tool", icon: Settings },
-      // { href: "/users-permission/invite-member", label: "Users & Permission", icon: Users },
-      { href: "/chatbox", label: "Tin nhắn", icon: MessageCircleMore },
-      { href: "/mistral/chat", label: "Chatbot", icon: Bot },
-
-    ],
-    []
+      { href: "/", label: "Quay lại tổng quan", icon: ChevronLeft }
+    ],[]
   );
+
+  const chats = [
+  {
+    href: "/mistral/chat",
+    label: "Chat với Mistral AI",
+    avatar: "",
+    lastMessage: "Xin chào! Tôi có thể giúp gì cho bạn?",
+  },
+]
 
   // Fake data: recent activity
   const recentActivities = [
@@ -104,7 +103,8 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
         {/* Sidebar left */}
         <aside className="sticky top-14 hidden h-[calc(100dvh-56px)] border-r md:block">
           <div className="flex h-full flex-col px-3 py-3">
-            <NavSection title="Làm việc" items={nav} pathname={pathname || "/"} />
+            <NavList items={nav} pathname={pathname || "/"} />
+            <ChatSection title="Tin nhắn" chats={chats} pathname={pathname || "/"} />
             <div className="mt-auto pt-3 text-xs opacity-60">
               <p>v0.1.0</p>
               <p>ERP System Builder by VIETLINH</p>
@@ -113,9 +113,9 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
         </aside>
 
         {/* Content */}
-        <main className="min-h-[calc(100dvh-56px)] px-3 py-10 md:px-8 lg:px-12">
-          <Breadcrumb pathname={pathname || "/"} />
-          <div className="mt-4">{children}</div>
+        <main className="min-h-[calc(100dvh-56px)] px-3 py-5 pt-5 md:px-8 lg:px-12">
+          {/* <Breadcrumb pathname={pathname || "/"} /> */}
+          <div className="mt-0">{children}</div>
         </main>
 
         {/* Sidebar right */}
@@ -159,35 +159,49 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
 
       {/* Mobile sidebar overlay */}
       {open && (
-        <div
-          className="fixed inset-0 z-50 md:hidden"
-          role="dialog"
-          aria-modal="true"
+  <div
+    className="fixed inset-0 z-50 md:hidden"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      className="absolute inset-0 bg-black/40"
+      onClick={() => setOpen(false)}
+    />
+    <div className="absolute inset-y-0 left-0 w-72 translate-x-0 bg-background shadow-xl">
+      <div className="flex items-center justify-between border-b px-3 py-3">
+        <span className="text-sm font-semibold">Menu</span>
+        <button
+          className="inline-flex h-9 w-9 items-center justify-center rounded-xl border"
+          onClick={() => setOpen(false)}
         >
-          <div
-            className="absolute inset-0 bg-black/40"
-            onClick={() => setOpen(false)}
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* ✨ Thêm scroll để danh sách dài vẫn cuộn được */}
+      <div className="flex h-[calc(100dvh-56px)] flex-col overflow-y-auto px-2 py-2">
+        {/* Nav */}
+        <NavList
+          items={nav}
+          pathname={pathname || "/"}
+          onNavigate={() => setOpen(false)}
+        />
+
+        {/* ✨ Tin nhắn cho mobile */}
+        <div className="mt-4">
+          <ChatSection
+            title="Tin nhắn"
+            chats={chats}
+            pathname={pathname || "/"}
+            // Nếu ChatSection có prop onNavigate thì dùng để auto đóng sidebar:
           />
-          <div className="absolute inset-y-0 left-0 w-72 translate-x-0 bg-background shadow-xl">
-            <div className="flex items-center justify-between border-b px-3 py-3">
-              <span className="text-sm font-semibold">Menu</span>
-              <button
-                className="inline-flex h-9 w-9 items-center justify-center rounded-xl border"
-                onClick={() => setOpen(false)}
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="px-2 py-2">
-              <NavList
-                items={nav}
-                pathname={pathname || "/"}
-                onNavigate={() => setOpen(false)}
-              />
-            </div>
-          </div>
         </div>
-      )}
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

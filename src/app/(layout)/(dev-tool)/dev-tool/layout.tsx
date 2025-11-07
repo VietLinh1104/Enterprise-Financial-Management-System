@@ -20,10 +20,10 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
   const nav = useMemo(
       () => [
         { href: "/", label: "Quay lại tổng quan", icon: ChevronLeft },
-        { href: "/dev-tool/data-type", label: "Data Type", icon: FileType },
-        { href: "/dev-tool/api-service", label: "API Service", icon: Waypoints },
-        { href: "/dev-tool/form-builder", label: "Form Builder", icon: TextCursorInput },
-        { href: "/dev-tool/datatable-builder", label: "Data Table Builder", icon: Table2 },
+        // { href: "/dev-tool/data-type", label: "Data Type", icon: FileType },
+        // { href: "/dev-tool/api-service", label: "API Service", icon: Waypoints },
+        // { href: "/dev-tool/form-builder", label: "Form Builder", icon: TextCursorInput },
+        // { href: "/dev-tool/datatable-builder", label: "Data Table Builder", icon: Table2 },
         { href: "/dev-tool/swagger", label: "Swagger UI", icon: Braces }
       ],
       []
